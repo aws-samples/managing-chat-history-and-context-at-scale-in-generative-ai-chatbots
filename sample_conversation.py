@@ -1,3 +1,4 @@
+# Sample conversation data for demonstration purposes. Accurary of responses has not been verified.
 conversation = [
 {"role": "user", "content": "Can you tell me what AWS is all about?"},
 {"role": "assistant", "content": "AWS stands for Amazon Web Services, a cloud computing platform offering a range of infrastructure and application services."},
