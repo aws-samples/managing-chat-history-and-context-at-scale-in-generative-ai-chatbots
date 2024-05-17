@@ -22,9 +22,9 @@ In this post, we present a pattern that leverages a hybrid architecture combinin
 3. Relevance vs. Redundancy:
     - Passing too much data to the LLM can introduce noise, reducing response quality.
     - Including redundant information overwhelms the LLM and consumes valuable tokens.
-4. Scalable Data Management:
-    - The chat system must handle growing volumes of messages while ensuring each message is quickly stored and queried.
-    - Summarizing chat data is essential for balancing storage costs with efficient retrieval.
+4. Data Management Challenges:
+    - The chat system must efficiently handle growing volumes of messages.
+    - Ensuring each message is quickly stored and queried is critical for performance.
 
 
 
@@ -35,17 +35,17 @@ The solution involves three key components that work together to ensure chat his
 1. **In-Memory Chat History Storage (Redis):**
    - **Purpose:** Provides immediate access to recent chat messages, reducing latency during live conversations.
    - **Structure:** Messages are stored in user-specific Redis stacks, organized by batch for fast retrieval and summarization.
-   - **Advantage:** Offers high-speed reads/writes, serving as a buffer before data is persisted to DynamoDB.
+   - **Use:** Offers high-speed reads/writes, serving as a buffer before data is persisted to DynamoDB.
 
 2. **Persistent Chat History Storage (DynamoDB):**
    - **Purpose:** Ensures reliable and scalable storage of all historical chat data.
-   - **Structure:** Uses a Global Secondary Index (GSI) to efficiently query messages based on `UserId` and `Timestamp`.
-   - **Advantage:** Enables consistent long-term storage and retrieval, allowing access to complete historical data.
+   - **Structure:** Uses a composite primary key to query messages based on `UserId` and `Timestamp`.
+   - **Use:** Enables consistent long-term storage and retrieval, allowing access to complete historical data.
 
 3. **Summarization Logic:**
    - **Purpose:** Aggregates every 20 messages into a summary to provide concise conversation context.
    - **Batch Summaries:** Summaries contain essential details that are more relevant than passing all messages individually to the LLM.
-   - **Advantage:** Provides a compact overview of conversations, reducing input size for LLMs while maintaining relevant historical context.
+   - **Use:** Provides a compact overview of conversations, reducing input size for LLMs while maintaining relevant historical context.
 
 
 <img src="architecture.png" alt="rchitecture" width="500px" />
